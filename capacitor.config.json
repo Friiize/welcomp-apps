@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "WelcompApps",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

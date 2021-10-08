@@ -1,0 +1,8 @@
+{
+  "name": "WelcompApps",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "c2ba159f"
+}
