@@ -1,6 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { createWorker } from 'tesseract.js';
+import {Component, Input, OnInit} from '@angular/core';
+import {Camera, CameraResultType, CameraSource} from '@capacitor/camera';
+import {createWorker} from 'tesseract.js';
 
 @Component({
   selector: 'app-explore-container',
@@ -10,44 +10,50 @@ import { createWorker } from 'tesseract.js';
 export class ExploreContainerComponent implements OnInit {
   @Input() name: string;
   outputText: string;
-  ocrResult = 'Recognizing...';
+  ocrResult = 'Waiting for a picture...';
   captureProgess = 0;
+  workerReady = false;
   image;
-  worker;
+  worker: Tesseract.Worker;
   constructor() {
-    this.doOCR();
+    this.loadWorker();
   }
 
   ngOnInit() {
   }
 
-  async doOCR() {
-    const worker = createWorker({
-      logger: m => {
-        console.log(m);
+  async loadWorker() {
+    this.worker = createWorker({
+      logger: progress => {
+        console.log(progress);
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        (m.status === 'reconizing text') ? this.captureProgess = parseInt('' + m.progress * 100, 10): null;
+        (progress.status === 'reconizing text') ? this.captureProgess = parseInt('' + progress.progress * 100, 10): null;
       },
     });
     await this.worker.load();
-    await this.worker.loadLanguage('eng');
-    await this.worker.initialize('eng');
+    await this.worker.loadLanguage('fra');
+    await this.worker.initialize('fra');
+    console.log('end');
+    this.workerReady = true;
   };
 
   async captureImage() {
       const image = await Camera.getPhoto({
         quality: 90,
         allowEditing: true,
-        resultType: CameraResultType.Uri
+        resultType: CameraResultType.DataUrl,
+        source: CameraSource.Camera
       });
-      console.log(image);
+      console.log('Image : ', image);
       this.image = image.dataUrl;
   }
 
   async recognizeImage() {
-    const {data: {text}} = await this.worker.recognize(this.image);
-    this.ocrResult = text;
-    console.log(text);
+    this.ocrResult = 'Recognizing...';
+    const result = await this.worker.recognize(this.image);
+    console.log(result);
+    this.ocrResult = result.data.text;
+    console.log(this.ocrResult);
     await this.worker.terminate();
   }
 }

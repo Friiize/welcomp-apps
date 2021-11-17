@@ -3,8 +3,11 @@
      <h2>Result: </h2>
      <p>
        {{ocrResult}}
+       <ion-card *ngIf="captureProgess && workerReady > 0">
+         {{captureProgess}}%
+       </ion-card>
      </p>
      <ion-button color="medium" (click)="captureImage()">Photographier</ion-button>
-     <ion-button color="medium" (click)="recognizeImage()">Scanner</ion-button>
+     <ion-button color="medium" [disabled]="!workerReady" (click)="recognizeImage()">Scanner</ion-button>
 
 </div>
