@@ -4,11 +4,11 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { ExploreContainerComponent } from './explore-container.component';
+import {FactureRecognitionComponent} from './facture-recognition.component';
 
 @NgModule({
   imports: [ CommonModule, FormsModule, IonicModule],
-  declarations: [ExploreContainerComponent],
-  exports: [ExploreContainerComponent]
+  declarations: [FactureRecognitionComponent],
+  exports: [FactureRecognitionComponent]
 })
-export class ExploreContainerComponentModule {}
+export class FactureRecognitionComponentModule {}

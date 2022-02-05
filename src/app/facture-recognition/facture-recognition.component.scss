@@ -1,19 +1,20 @@
-#container {
+#recognition {
   text-align: center;
-
+  height: 100%;
+  width: 100%;
   position: absolute;
   left: 0;
   right: 0;
-  top: 50%;
+  top: 100%;
   transform: translateY(-50%);
 }
 
-#container strong {
+#recognition strong {
   font-size: 20px;
   line-height: 26px;
 }
 
-#container p {
+#recognition p {
   font-size: 16px;
   line-height: 22px;
 
@@ -22,6 +23,6 @@
   margin: 0;
 }
 
-#container a {
+#recognition a {
   text-decoration: none;
 }
