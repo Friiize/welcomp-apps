@@ -11,12 +11,12 @@ export class FactureModelingComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    const cameraPreviewOptions: CameraPreviewOptions = {
+    /*const cameraPreviewOptions: CameraPreviewOptions = {
     position: 'rear',
     height: window.screen.height,
     width: window.screen.width
   };
-    CameraPreview.start(cameraPreviewOptions).then();
+    CameraPreview.start(cameraPreviewOptions).then();*/
   }
 
 }

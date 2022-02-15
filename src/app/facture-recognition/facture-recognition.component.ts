@@ -1,6 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {createWorker} from 'tesseract.js';
 import {Camera, CameraResultType, CameraSource} from '@capacitor/camera';
+import {FactureService} from '../services/facture.service';
+import {Base64ConvertorService} from '../services/base64-convertor.service';
+
 @Component({
   selector: 'app-facture-recognition',
   templateUrl: './facture-recognition.component.html',
@@ -14,7 +17,7 @@ export class FactureRecognitionComponent implements OnInit {
   workerReady = false;
   image;
   worker: Tesseract.Worker;
-  constructor() {
+  constructor(private readonly factureService: FactureService, private readonly base64Convertor: Base64ConvertorService) {
     this.loadWorker().then();
   }
   ngOnInit() {}
@@ -39,7 +42,8 @@ export class FactureRecognitionComponent implements OnInit {
       resultType: CameraResultType.DataUrl,
       source: CameraSource.Camera
     });
-    this.image = image.dataUrl;
+    this.image = this.factureService.getData(this.base64Convertor.convertToFile(image.dataUrl, 'factureImage')).subscribe();
+    //console.log(this.base64Convertor.convertToFile(image.dataUrl, 'factureImage'));
     this.workerReady = true;
   }
 
@@ -64,4 +68,3 @@ class ModelFacture {
   Pos x;
   Pos y
 }*/
-
