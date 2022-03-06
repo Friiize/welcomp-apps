@@ -44,9 +44,9 @@ export class FactureRecognitionComponent implements OnInit {
     const converted = await this.convertImage(image);
     const formData = new FormData();
     console.log(image);
-    formData.append('image', image.dataUrl);
+    formData.append('image', converted);
     this.image = this.factureService.getData(formData).subscribe(data => {
-      console.log('data : ' + data);
+      console.log(data);
     });
 
     //this.image = this.factureService.test().subscribe();
@@ -54,7 +54,7 @@ export class FactureRecognitionComponent implements OnInit {
     // this.workerReady = true;
   }
   async convertImage(image: Photo) {
-    return this.base64Convertor.convertToFile(image.dataUrl, 'factureImage');
+    return this.base64Convertor.convertToFile((image.dataUrl), 'factureImage');
   }
 
   // async recognizeImage() {
@@ -65,16 +65,3 @@ export class FactureRecognitionComponent implements OnInit {
   //   await this.worker.terminate();
   // }
 }
-
-/*structure Pos {
-  int x, y;
-  string nomCase;
-}
-
-class ModelFacture {
-  Pos dst;
-  Pos prix;
-  Pos exp;
-  Pos x;
-  Pos y
-}*/

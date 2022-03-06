@@ -24,7 +24,7 @@ export class FactureService implements FactureServiceInterface {
   constructor(private readonly http: HttpClient) {}
 
   getData(image: FormData): Observable<FactureInterface> {
-    return this.http.post<FactureInterface>(`${environment.api}/`, {});
+    return this.http.post<FactureInterface>(`${environment.api}/`, image);
   }
   test() {
     return this.http.get(`${environment.api}/`);
