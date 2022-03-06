@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -12,7 +12,8 @@ interface FactureInterface {
 }
 
 interface FactureServiceInterface {
-  getData(image: File): Observable<FactureInterface>;
+  getData(image: FormData): Observable<FactureInterface>;
+  test();
 }
 
 @Injectable({
@@ -22,7 +23,10 @@ export class FactureService implements FactureServiceInterface {
 
   constructor(private readonly http: HttpClient) {}
 
-  getData(image: File): Observable<FactureInterface> {
-    return this.http.get<FactureInterface>(`${environment.api}/nailedthis/${image}`);
+  getData(image: FormData): Observable<FactureInterface> {
+    return this.http.post<FactureInterface>(`${environment.api}/`, {});
+  }
+  test() {
+    return this.http.get(`${environment.api}/`);
   }
 }
