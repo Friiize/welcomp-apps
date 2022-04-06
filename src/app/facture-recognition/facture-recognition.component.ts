@@ -1,19 +1,39 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Camera, CameraResultType, CameraSource, Photo} from '@capacitor/camera';
-import {FactureService} from '../services/facture.service';
-import {Base64ConvertorService} from '../services/base64-convertor.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Camera, CameraResultType, CameraSource} from '@capacitor/camera';
+import {FactureInterface, FactureService} from '../services/facture.service';
+import {Subscription} from 'rxjs';
+import {FormBuilder} from '@angular/forms';
+import {AlertController} from '@ionic/angular';
 
 @Component({
   selector: 'app-facture-recognition',
   templateUrl: './facture-recognition.component.html',
   styleUrls: ['./facture-recognition.component.scss'],
 })
-export class FactureRecognitionComponent implements OnInit {
-  @Input() name: string;
-  outputText: string;
-  image;
-  constructor(private readonly factureService: FactureService, private readonly base64Convertor: Base64ConvertorService) {}
-  ngOnInit() {}
+export class FactureRecognitionComponent implements OnInit, OnDestroy {
+  data: FactureInterface;
+  isVisible;
+  isValidating;
+  postProcessDataSubscription: Subscription;
+  factureDataForm = this.formBuilder.group({
+    dueDate: '',
+    sold: '',
+    iban: '',
+    factureNumber: ''
+  });
+  editFactureNumber: string;
+  editIban: string;
+  editSold: string;
+  editDueDate: string;
+
+  // eslint-disable-next-line max-len
+  constructor(private alertController: AlertController, private formBuilder: FormBuilder, private readonly factureService: FactureService) {
+  }
+
+  ngOnInit() {
+    this.isVisible = true;
+    this.isValidating = false;
+  }
 
   async captureImage() {
     const image = await Camera.getPhoto({
@@ -22,15 +42,27 @@ export class FactureRecognitionComponent implements OnInit {
       resultType: CameraResultType.DataUrl,
       source: CameraSource.Camera
     });
-    const converted = await this.convertImage(image);
+    const converted = await this.factureService.convertImage(image);
     const formData = new FormData();
-    console.log(image);
     formData.append('image', converted);
-    this.image = this.factureService.getData(formData).subscribe(data => {
+    this.postProcessDataSubscription = this.factureService.postprocessData(formData).subscribe(data => {
+      this.data = data;
       console.log(data);
+      if (this.data != null) {
+        this.isVisible = (!this.isVisible);
+      }
     });
   }
-  async convertImage(image: Photo) {
-    return this.base64Convertor.convertToFile((image.dataUrl), 'factureImage');
+
+  onSubmit() {
+    this.isValidating = (!this.isValidating);
+  }
+
+  ngOnDestroy(): void {
+    this.postProcessDataSubscription.unsubscribe();
+  }
+
+  async onSendDueFacture() {
+    console.log(this.editFactureNumber);
   }
 }

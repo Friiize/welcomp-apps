@@ -6,13 +6,15 @@ import { Tab1Page } from './tab1.page';
 
 import { Tab1PageRoutingModule } from './tab1-routing.module';
 import {FactureModelingComponent} from '../facture-modeling/facture-modeling.component';
+import {FactureRecognitionComponentModule} from '../facture-recognition/facture-recognition.module';
 
 @NgModule({
   imports: [
     IonicModule,
     CommonModule,
     FormsModule,
-    Tab1PageRoutingModule
+    Tab1PageRoutingModule,
+    FactureRecognitionComponentModule
   ],
   declarations: [Tab1Page, FactureModelingComponent]
 })

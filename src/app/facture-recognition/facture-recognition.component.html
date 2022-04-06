@@ -1,12 +1,50 @@
-<div id="recognition">
-  <ion-img src="{{this.image}}"></ion-img>
-  <p>
-    {{ocrResult}}
-    <ion-progress-bar *ngIf="captureProgress > 0">
-      {{captureProgress}}%
-    </ion-progress-bar>
-  </p>
-  <ion-button color="medium" (click)="loadWorker()">Recharger</ion-button>
+<ion-content [style.display]="isVisible ? 'block' : 'none'" id="recognition">
   <ion-button color="medium" (click)="captureImage()">Photographier</ion-button>
-  <ion-button color="medium" [disabled]="!workerReady" (click)="recognizeImage()">Scanner</ion-button>
-</div>
+</ion-content>
+<ion-content *ngIf="isVisible === false" [style.display]="isVisible ? 'none' : 'block'" id="listing">
+  <form [style.display]="isValidating ? 'none' : 'block'" [formGroup]="factureDataForm" (ngSubmit)="onSubmit()">
+    <ion-item>
+      <ion-label>Due date</ion-label>
+      <ion-select formControlName="dueDate" interface="action-sheet">
+        <ion-select-option *ngFor="let date of data.dueDate">{{date.date[0]}}/{{date.date[1]}}/{{date.date[2]}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+    <ion-label>Sold</ion-label>
+    <ion-select formControlName="sold" interface="action-sheet">
+      <ion-select-option *ngFor="let sold of data.sold">{{sold.sold[0]}}{{sold.sold[1]}}{{sold.sold[2]}}{{sold.sold[3]}}{{sold.sold[4]}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+    <ion-item>
+      <ion-label>Iban</ion-label>
+      <ion-select formControlName="iban" interface="action-sheet">
+        <ion-select-option *ngFor="let iban of data.iban">{{iban.iban[0]}}{{iban.iban[1]}} {{iban.iban[2]}}</ion-select-option>
+      </ion-select>
+    </ion-item><ion-item>
+    <ion-label>Facture number</ion-label>
+    <ion-select formControlName="factureNumber" interface="action-sheet">
+      <ion-select-option [value]="factureNumber.number" *ngFor="let factureNumber of data.numbers">{{factureNumber.number}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+    <ion-button class="button" type="submit">Proceed Validation</ion-button>
+  </form>
+  <ion-content [style.display]="isValidating ? 'block' : 'none'">
+    <ion-item>
+      <label>Due Date</label>
+      <ion-textarea [(ngModel)]="editDueDate" [value]="factureDataForm.get(['dueDate']).value"></ion-textarea>
+    </ion-item>
+    <ion-item>
+    <label>Sold</label>
+    <ion-textarea [(ngModel)]="editSold" [value]="factureDataForm.get(['sold']).value"></ion-textarea>
+  </ion-item>
+    <ion-item>
+      <label>Iban</label>
+      <ion-textarea [(ngModel)]="editIban" [value]="factureDataForm.get(['iban']).value"></ion-textarea>
+    </ion-item>
+    <ion-item>
+      <label>Facture number</label>
+      <ion-textarea [(ngModel)]="editFactureNumber" [value]="factureDataForm.get(['factureNumber']).value"></ion-textarea>
+    </ion-item>
+    <ion-button (click)="onSendDueFacture()">Confirm & Create new reminder</ion-button>
+  </ion-content>
+</ion-content>

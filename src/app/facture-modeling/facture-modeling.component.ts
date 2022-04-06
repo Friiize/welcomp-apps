@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {CameraPreview, CameraPreviewOptions} from '@capacitor-community/camera-preview';
 
 @Component({
   selector: 'app-facture-modeling',
@@ -7,10 +6,8 @@ import {CameraPreview, CameraPreviewOptions} from '@capacitor-community/camera-p
   styleUrls: ['./facture-modeling.component.scss'],
 })
 export class FactureModelingComponent implements OnInit {
-
   constructor() { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
 }

@@ -1,32 +1,39 @@
-import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {environment} from '../../environments/environment';
+import {Photo} from '@capacitor/camera';
+import {Base64ConvertorService} from './base64-convertor.service';
 
-interface FactureInterface {
-  deuDate?: Date;
-  sold?: number;
-  creditCard?: string;
-  clientNumber?: number;
-  factureNumber?: number;
+export interface FactureInterface {
+  dueDate?: string[];
+  sold?: string[];
+  iban?: string[];
+  // eslint-disable-next-line id-blacklist
+  numbers?: { number: string }[];
 }
 
 interface FactureServiceInterface {
-  getData(image: FormData): Observable<FactureInterface>;
-  test();
+  postprocessData(image: FormData): Observable<FactureInterface>;
+
+  convertImage(image: Photo);
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class FactureService implements FactureServiceInterface {
+  private data;
 
-  constructor(private readonly http: HttpClient) {}
-
-  getData(image: FormData): Observable<FactureInterface> {
-    return this.http.post<FactureInterface>(`${environment.api}/`, image);
+  constructor(private readonly http: HttpClient, private readonly base64Convertor: Base64ConvertorService) {
   }
-  test() {
-    return this.http.get(`${environment.api}/`);
+
+  postprocessData(image: FormData): Observable<FactureInterface> {
+    this.data = this.http.post<FactureInterface>(`${environment.api}/`, image);
+    return this.data;
+  }
+
+  async convertImage(image: Photo) {
+    return this.base64Convertor.convertToFile((image.dataUrl), 'factureImage');
   }
 }
