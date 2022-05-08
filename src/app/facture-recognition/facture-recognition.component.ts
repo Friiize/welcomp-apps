@@ -1,9 +1,12 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Camera, CameraResultType, CameraSource} from '@capacitor/camera';
-import {FactureInterface, FactureService} from '../services/facture.service';
-import {Subscription} from 'rxjs';
-import {FormBuilder} from '@angular/forms';
-import {AlertController} from '@ionic/angular';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { FactureInterface, FactureService } from '../services/facture.service';
+import { Subscription } from 'rxjs';
+import { FormBuilder } from '@angular/forms';
+import { AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { IcsFileMakerService } from '../services/ics-file-maker.service';
+import { EmailComposer } from '@awesome-cordova-plugins/email-composer/ngx';
 
 @Component({
   selector: 'app-facture-recognition',
@@ -19,16 +22,24 @@ export class FactureRecognitionComponent implements OnInit, OnDestroy {
     dueDate: '',
     sold: '',
     iban: '',
-    factureNumber: ''
+    factureNumber: '',
   });
-  editFactureNumber: string;
-  editIban: string;
-  editSold: string;
-  editDueDate: string;
+  editFactureForm = this.formBuilder.group({
+    dueDate: '',
+    sold: '',
+    iban: '',
+    factureNumber: '',
+    email: '',
+  });
 
-  // eslint-disable-next-line max-len
-  constructor(private alertController: AlertController, private formBuilder: FormBuilder, private readonly factureService: FactureService) {
-  }
+  constructor(
+    private router: Router,
+    private alertController: AlertController,
+    private formBuilder: FormBuilder,
+    private readonly factureService: FactureService,
+    private readonly iCSFileMaker: IcsFileMakerService,
+    private emailComposer: EmailComposer
+  ) {}
 
   ngOnInit() {
     this.isVisible = true;
@@ -40,22 +51,27 @@ export class FactureRecognitionComponent implements OnInit, OnDestroy {
       quality: 90,
       allowEditing: true,
       resultType: CameraResultType.DataUrl,
-      source: CameraSource.Camera
+      source: CameraSource.Camera,
     });
     const converted = await this.factureService.convertImage(image);
     const formData = new FormData();
     formData.append('image', converted);
-    this.postProcessDataSubscription = this.factureService.postprocessData(formData).subscribe(data => {
-      this.data = data;
-      console.log(data);
-      if (this.data != null) {
-        this.isVisible = (!this.isVisible);
-      }
-    });
+    this.postProcessDataSubscription = this.factureService
+      .postprocessData(formData)
+      .subscribe((data) => {
+        this.data = data;
+        console.log(data);
+        if (this.data != null) {
+          this.isVisible = !this.isVisible;
+        }
+      });
   }
 
   onSubmit() {
-    this.isValidating = (!this.isValidating);
+    if (this.factureDataForm.invalid) {
+      return alert('Form is invalid');
+    }
+    this.isValidating = !this.isValidating;
   }
 
   ngOnDestroy(): void {
@@ -63,6 +79,27 @@ export class FactureRecognitionComponent implements OnInit, OnDestroy {
   }
 
   async onSendDueFacture() {
-    console.log(this.editFactureNumber);
+    if (this.editFactureForm.invalid) {
+      return alert('Form is invalid');
+    }
+    const formData = new FormData();
+    formData.append('dueDate', this.editFactureForm.get(['dueDate']).value);
+    formData.append('sold', this.editFactureForm.get(['sold']).value);
+    formData.append('iban', this.editFactureForm.get(['iban']).value);
+    formData.append(
+      'factureNumber',
+      this.editFactureForm.get(['factureNumber']).value
+    );
+    formData.append('email', this.editFactureForm.get(['email']).value);
+    this.factureService.archiveFacture(formData).subscribe((res) => {
+      console.log(res);
+      const attachment = this.iCSFileMaker.convertToICS(res, 'reminder.ics');
+      const email = {
+        to: this.editFactureForm.get(['email']).value,
+        attachments: ['file://' + attachment],
+        subject: 'ROBOT: Facture a payer !',
+      };
+      this.emailComposer.open(email);
+    });
   }
 }

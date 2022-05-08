@@ -20,6 +20,7 @@
     "@angular/platform-browser-dynamic": "~12.1.1",
     "@angular/router": "~12.1.1",
     "@awesome-cordova-plugins/core": "^5.38.0",
+    "@awesome-cordova-plugins/email-composer": "^5.41.0",
     "@capacitor-community/camera-preview": "^2.0.0-beta.2",
     "@capacitor/android": "3.2.4",
     "@capacitor/app": "1.0.3",
@@ -32,6 +33,7 @@
     "@ionic/angular": "^5.5.2",
     "@types/tesseract.js": "^2.0.0",
     "com-sarriaroman-photoviewer": "^1.2.5",
+    "cordova-plugin-email-composer": "^0.10.0",
     "rxjs": "~6.6.0",
     "tesseract.js": "^2.0.0",
     "tslib": "^2.2.0",
@@ -66,6 +68,7 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
+    "prettier": "^2.6.2",
     "protractor": "~7.0.0",
     "ts-node": "~8.3.0",
     "typescript": "~4.2.4"

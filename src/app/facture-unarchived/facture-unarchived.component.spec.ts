@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { FactureModelingComponent } from './facture-modeling.component';
+import { FactureUnarchivedComponent } from './facture-unarchived.component';
 
-describe('FactureModelingComponent', () => {
-  let component: FactureModelingComponent;
-  let fixture: ComponentFixture<FactureModelingComponent>;
+describe('FactureUnarchivedComponent', () => {
+  let component: FactureUnarchivedComponent;
+  let fixture: ComponentFixture<FactureUnarchivedComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FactureModelingComponent ],
+      declarations: [ FactureUnarchivedComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(FactureModelingComponent);
+    fixture = TestBed.createComponent(FactureUnarchivedComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

@@ -5,8 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Tab1Page } from './tab1.page';
 
 import { Tab1PageRoutingModule } from './tab1-routing.module';
-import {FactureModelingComponent} from '../facture-modeling/facture-modeling.component';
-import {FactureRecognitionComponentModule} from '../facture-recognition/facture-recognition.module';
+import { FactureRecognitionComponentModule } from '../facture-recognition/facture-recognition.module';
 
 @NgModule({
   imports: [
@@ -14,8 +13,8 @@ import {FactureRecognitionComponentModule} from '../facture-recognition/facture-
     CommonModule,
     FormsModule,
     Tab1PageRoutingModule,
-    FactureRecognitionComponentModule
+    FactureRecognitionComponentModule,
   ],
-  declarations: [Tab1Page, FactureModelingComponent]
+  declarations: [Tab1Page],
 })
 export class Tab1PageModule {}

@@ -17,6 +17,12 @@ interface FactureServiceInterface {
   postprocessData(image: FormData): Observable<FactureInterface>;
 
   convertImage(image: Photo);
+
+  convertFile(file): Promise<File>;
+
+  archiveFacture(formData: FormData): Observable<any>;
+
+  listUnarchived(): Observable<FactureInterface>;
 }
 
 @Injectable({
@@ -33,7 +39,21 @@ export class FactureService implements FactureServiceInterface {
     return this.data;
   }
 
-  async convertImage(image: Photo) {
+  async convertImage(image: Photo): Promise<File> {
     return this.base64Convertor.convertToFile((image.dataUrl), 'factureImage');
   }
+
+  archiveFacture(formData: FormData): Observable<any> {
+    // @ts-ignore
+    return this.http.post<any>(`${environment.api}/reminder/`, formData, {responseType: 'text'});
+  }
+
+  async convertFile(file): Promise<File> {
+    return this.base64Convertor.convertToFile(file, 'reminder');
+  }
+
+  listUnarchived(): Observable<FactureInterface> {
+    return this.http.get<FactureInterface>(`${environment.api}/unarchived/`);
+  }
 }
+

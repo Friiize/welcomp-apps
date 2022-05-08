@@ -28,23 +28,27 @@
   </ion-item>
     <ion-button class="button" type="submit">Proceed Validation</ion-button>
   </form>
-  <ion-content [style.display]="isValidating ? 'block' : 'none'">
+  <form [style.display]="isValidating ? 'block' : 'none'" [formGroup]="editFactureForm" (ngSubmit)="onSendDueFacture()">
     <ion-item>
       <label>Due Date</label>
-      <ion-textarea [(ngModel)]="editDueDate" [value]="factureDataForm.get(['dueDate']).value"></ion-textarea>
+      <ion-textarea formControlName="dueDate" [value]="factureDataForm.get(['dueDate']).value"></ion-textarea>
     </ion-item>
     <ion-item>
     <label>Sold</label>
-    <ion-textarea [(ngModel)]="editSold" [value]="factureDataForm.get(['sold']).value"></ion-textarea>
+    <ion-textarea formControlName="sold" [value]="factureDataForm.get(['sold']).value"></ion-textarea>
   </ion-item>
     <ion-item>
       <label>Iban</label>
-      <ion-textarea [(ngModel)]="editIban" [value]="factureDataForm.get(['iban']).value"></ion-textarea>
+      <ion-textarea formControlName="iban" [value]="factureDataForm.get(['iban']).value"></ion-textarea>
     </ion-item>
     <ion-item>
       <label>Facture number</label>
-      <ion-textarea [(ngModel)]="editFactureNumber" [value]="factureDataForm.get(['factureNumber']).value"></ion-textarea>
+      <ion-textarea formControlName="factureNumber" [value]="factureDataForm.get(['factureNumber']).value"></ion-textarea>
     </ion-item>
-    <ion-button (click)="onSendDueFacture()">Confirm & Create new reminder</ion-button>
-  </ion-content>
+    <ion-item>
+    <label>Email for appointment</label>
+    <ion-textarea inputmode="email" formControlName="email"></ion-textarea>
+  </ion-item>
+    <ion-button class="button" type="submit">Confirm & Create new reminder</ion-button>
+  </form>
 </ion-content>

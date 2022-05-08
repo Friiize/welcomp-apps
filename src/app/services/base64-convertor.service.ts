@@ -6,8 +6,8 @@ import {Injectable} from '@angular/core';
 export class Base64ConvertorService {
 
   constructor() { }
-  convertToFile(dataurl: string, filename: string) {
-    const arr = dataurl.split(',');
+  convertToFile(data: string, filename: string) {
+    const arr = data.split(',');
     const mime = arr[0].match(/:(.*?);/)[1];
     const baseStr = atob(arr[1]);
     let n = baseStr.length;
